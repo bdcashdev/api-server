@@ -3,11 +3,11 @@ from server import utils
 class Address():
     @classmethod
     def balance(cls, address: str):
-        return utils.make_request("getaddressbalance", [address])
+        return utils.make_request("getbalance", [address])
 
     @classmethod
     def mempool(cls, address: str, raw=False):
-        data = utils.make_request("getaddressmempool", [address])
+        data = utils.make_request("getrawmempool", [address])
 
         if data["error"] is None:
             total = len(data["result"])
@@ -31,7 +31,7 @@ class Address():
 
     @classmethod
     def unspent(cls, address: str, amount: int):
-        data = utils.make_request("getaddressutxos", [address, utils.amount(amount)])
+        data = utils.make_request("listunspent", [address, utils.amount(amount)])
 
         if data["error"] is None:
             utxos = []
@@ -50,7 +50,7 @@ class Address():
 
     @classmethod
     def history(cls, address: str):
-        data = utils.make_request("getaddresstxids", [address])
+        data = utils.make_request("listreceivedbyaddress", [address])
 
         if data["error"] is None:
             data["result"] = data["result"][::-1]
@@ -68,7 +68,7 @@ class Address():
         addresses = list(set(addresses))
         result = []
         for address in addresses:
-            data = utils.make_request("getaddresstxids", [address])
+            data = utils.make_request("listreceivedbyaddress", [address])
             if len(data["result"]) > 0:
                 result.append(address)
 
